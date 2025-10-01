@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Cellule {
+    int valeur;
+    struct Cellule *suivant;
+} Cellule;
+
+// Insertion dans une liste triée
+void InsererTrie(Cellule **liste, int x) {
+    Cellule *nouveau = (Cellule*)malloc(sizeof(Cellule));
+    nouveau->valeur = x;
+    nouveau->suivant = NULL;
+    
+    // Cas 1 : liste vide ou insertion en tête
+    if (*liste == NULL || x < (*liste)->valeur) {
+        nouveau->suivant = *liste;
+        *liste = nouveau;
+        return;
+    }
+    
+    // Cas 2 : recherche de la position d'insertion
+    Cellule *courant = *liste;
+    while (courant->suivant != NULL && courant->suivant->valeur < x) {
+        courant = courant->suivant;
+    }
+    
+    // Insertion après l'élément courant
+    nouveau->suivant = courant->suivant;
+    courant->suivant = nouveau;
+}
+
+// Fonction pour afficher la liste
+void AfficherListe(Cellule *liste) {
+    Cellule *courant = liste;
+    while (courant != NULL) {
+        printf("%d -> ", courant->valeur);
+        courant = courant->suivant;
+    }
+    printf("NULL\n");
+}
+
+// Programme principal de test
+int main() {
+    Cellule *liste = NULL;
+    
+    // Insertions dans l'ordre arbitraire
+    InsererTrie(&liste, 5);
+    InsererTrie(&liste, 2);
+    InsererTrie(&liste, 8);
+    InsererTrie(&liste, 1);
+    InsererTrie(&liste, 6);
+    
+    printf("Liste triée : ");
+    AfficherListe(liste);
+    
+    return 0;
+}
