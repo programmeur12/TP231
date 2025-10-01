@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Cellule {
+    int valeur;
+    struct Cellule *suivant;
+} Cellule;
+
+// Insertion en tête
+Cellule* insererTete(Cellule *tete, int valeur) {
+    Cellule *nouveau = malloc(sizeof(Cellule));
+    nouveau->valeur = valeur;
+    if (!tete) {
+        nouveau->suivant = nouveau;
+        return nouveau;
+    }
+    Cellule *dernier = tete;
+    while (dernier->suivant != tete) dernier = dernier->suivant;
+    nouveau->suivant = tete;
+    dernier->suivant = nouveau;
+    return nouveau;
+}
+
+// Insertion en queue  
+Cellule* insererQueue(Cellule *tete, int valeur) {
+    Cellule *nouveau = malloc(sizeof(Cellule));
+    nouveau->valeur = valeur;
+    if (!tete) {
+        nouveau->suivant = nouveau;
+        return nouveau;
+    }
+    Cellule *dernier = tete;
+    while (dernier->suivant != tete) dernier = dernier->suivant;
+    dernier->suivant = nouveau;
+    nouveau->suivant = tete;
+    return tete;
+}
+
+// Affichage
+void afficher(Cellule *tete) {
+    if (!tete) { printf("Liste vide\n"); return; }
+    Cellule *c = tete;
+    do { printf("%d → ", c->valeur); c = c->suivant; } while (c != tete);
+    printf("[début]\n");
+}
+
+int main() {
+    Cellule *liste = NULL;
+    
+    // Toutes les opérations dans un bloc serré
+    liste = insererTete(liste, 30); liste = insererTete(liste, 20); liste = insererTete(liste, 10);
+    printf("1: "); afficher(liste);
+    
+    liste = insererQueue(liste, 40); liste = insererQueue(liste, 50);
+    printf("2: "); afficher(liste);
+    
+    liste = insererTete(liste, 5); liste = insererQueue(liste, 60);
+    printf("3: "); afficher(liste);
+    
+    return 0;
+}
