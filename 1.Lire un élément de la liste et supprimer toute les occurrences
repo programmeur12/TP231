@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Cellule {
+    int valeur;
+    struct Cellule *suivant;
+} Cellule;
+
+
+void SupprimerOccurrences(Cellule **liste, int x) {
+    Cellule *courant = *liste;
+    Cellule *precedent = NULL;
+    Cellule *temp;
+    
+    // Parcours de la liste
+    while (courant != NULL) {
+        if (courant->valeur == x) {
+            // Élément trouvé, suppression
+            temp = courant;
+            
+            if (precedent == NULL) {
+                // Suppression en tête de liste
+                *liste = courant->suivant;
+                courant = *liste;
+            } else {
+                // Suppression au milieu ou fin
+                precedent->suivant = courant->suivant;
+                courant = courant->suivant;
+            }
+            
+            // Désallocation mémoire
+            free(temp);
+        } else {
+            // Passage à l'élément suivant
+            precedent = courant;
+            courant = courant->suivant;
+        }
+    }
+}
+```
+
+Utilisation :
+
+```c
+int main() {
+    Cellule *liste = NULL;  // Votre liste chaînée
+    int x;
+    
+    // Lecture de l'élément à supprimer
+    printf("Entrez l'élément à supprimer : ");
+    scanf("%d", &x);
+    
+    // Appel de la fonction de suppression
+    SupprimerOccurrences(&liste, x);
+    
+    return 0;
+}
+```run moi se code alors
