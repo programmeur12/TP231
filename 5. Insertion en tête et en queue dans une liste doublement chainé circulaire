@@ -1,0 +1,111 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Cellule {
+    int valeur;
+    struct Cellule *precedent;
+    struct Cellule *suivant;
+} Cellule;
+
+// Insertion en tête
+Cellule* insererTeteDoubleCirculaire(Cellule *tete, int valeur) {
+    Cellule *nouveau = (Cellule*)malloc(sizeof(Cellule));
+    nouveau->valeur = valeur;
+    
+    if (tete == NULL) {
+        // Liste vide : l'élément pointe vers lui-même dans les deux directions
+        nouveau->precedent = nouveau;
+        nouveau->suivant = nouveau;
+        return nouveau;
+    }
+    
+    // Récupérer le dernier élément (tete->precedent)
+    Cellule *dernier = tete->precedent;
+    
+    // Mise à jour des pointeurs
+    nouveau->suivant = tete;
+    nouveau->precedent = dernier;
+    
+    tete->precedent = nouveau;
+    dernier->suivant = nouveau;
+    
+    return nouveau; // Nouvelle tête
+}
+
+// Insertion en queue
+Cellule* insererQueueDoubleCirculaire(Cellule *tete, int valeur) {
+    Cellule *nouveau = (Cellule*)malloc(sizeof(Cellule));
+    nouveau->valeur = valeur;
+    
+    if (tete == NULL) {
+        // Liste vide : l'élément pointe vers lui-même
+        nouveau->precedent = nouveau;
+        nouveau->suivant = nouveau;
+        return nouveau;
+    }
+    
+    // Récupérer le dernier élément (tete->precedent)
+    Cellule *dernier = tete->precedent;
+    
+    // Mise à jour des pointeurs
+    nouveau->suivant = tete;
+    nouveau->precedent = dernier;
+    
+    dernier->suivant = nouveau;
+    tete->precedent = nouveau;
+    
+    return tete; // La tête ne change pas
+}
+
+// Affichage dans les deux sens
+void afficherDoubleCirculaire(Cellule *tete) {
+    if (tete == NULL) {
+        printf("Liste vide\n");
+        return;
+    }
+    
+    Cellule *courant = tete;
+    
+    printf("Sens direct   : ");
+    do {
+        printf("%d → ", courant->valeur);
+        courant = courant->suivant;
+    } while (courant != tete);
+    printf("[début]\n");
+    
+    printf("Sens inverse  : ");
+    courant = tete->precedent; // Commencer par le dernier
+    do {
+        printf("%d → ", courant->valeur);
+        courant = courant->precedent;
+    } while (courant != tete->precedent);
+    printf("[fin]\n");
+}
+
+// Programme principal de test
+int main() {
+    Cellule *liste = NULL;
+    
+    printf("=== LISTE DOUBLEMENT CHAÎNÉE CIRCULAIRE ===\n\n");
+    
+    // Insertions en tête
+    printf("Insertions en tête:\n");
+    liste = insererTeteDoubleCirculaire(liste, 30);
+    liste = insererTeteDoubleCirculaire(liste, 20);
+    liste = insererTeteDoubleCirculaire(liste, 10);
+    afficherDoubleCirculaire(liste);
+    
+    // Insertions en queue
+    printf("\nInsertions en queue:\n");
+    liste = insererQueueDoubleCirculaire(liste, 40);
+    liste = insererQueueDoubleCirculaire(liste, 50);
+    afficherDoubleCirculaire(liste);
+    
+    // Mix des deux
+    printf("\nMix tête/queue:\n");
+    liste = insererTeteDoubleCirculaire(liste, 5);
+    liste = insererQueueDoubleCirculaire(liste, 60);
+    afficherDoubleCirculaire(liste);
+    
+    return 0;
+}
