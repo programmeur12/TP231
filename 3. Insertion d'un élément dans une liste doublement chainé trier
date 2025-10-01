@@ -1,0 +1,88 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Cellule {
+    int valeur;
+    struct Cellule *precedent;
+    struct Cellule *suivant;
+} Cellule;
+
+// Insertion dans une liste doublement chaînée triée
+void InsererTrieDouble(Cellule **liste, int x) {
+    Cellule *nouveau = (Cellule*)malloc(sizeof(Cellule));
+    nouveau->valeur = x;
+    nouveau->precedent = NULL;
+    nouveau->suivant = NULL;
+    
+    // Cas 1 : liste vide
+    if (*liste == NULL) {
+        *liste = nouveau;
+        return;
+    }
+    
+    // Cas 2 : insertion en tête
+    if (x < (*liste)->valeur) {
+        nouveau->suivant = *liste;
+        (*liste)->precedent = nouveau;
+        *liste = nouveau;
+        return;
+    }
+    
+    // Cas 3 : recherche de la position d'insertion
+    Cellule *courant = *liste;
+    while (courant->suivant != NULL && courant->suivant->valeur < x) {
+        courant = courant->suivant;
+    }
+    
+    // Insertion après l'élément courant
+    nouveau->suivant = courant->suivant;
+    nouveau->precedent = courant;
+    
+    if (courant->suivant != NULL) {
+        courant->suivant->precedent = nouveau;
+    }
+    
+    courant->suivant = nouveau;
+}
+
+// Fonction pour afficher la liste dans les deux sens
+void AfficherListeDouble(Cellule *liste) {
+    Cellule *courant = liste;
+    
+    printf("Sens direct   : ");
+    while (courant != NULL) {
+        printf("%d -> ", courant->valeur);
+        courant = courant->suivant;
+    }
+    printf("NULL\n");
+    
+    // Trouver le dernier élément pour l'affichage inverse
+    courant = liste;
+    while (courant != NULL && courant->suivant != NULL) {
+        courant = courant->suivant;
+    }
+    
+    printf("Sens inverse  : ");
+    while (courant != NULL) {
+        printf("%d -> ", courant->valeur);
+        courant = courant->precedent;
+    }
+    printf("NULL\n");
+}
+
+// Programme principal de test
+int main() {
+    Cellule *liste = NULL;
+    
+    // Insertions dans l'ordre arbitraire
+    InsererTrieDouble(&liste, 5);
+    InsererTrieDouble(&liste, 2);
+    InsererTrieDouble(&liste, 8);
+    InsererTrieDouble(&liste, 1);
+    InsererTrieDouble(&liste, 6);
+    
+    printf("Liste doublement chaînée triée :\n");
+    AfficherListeDouble(liste);
+    
+    return 0;
+}
